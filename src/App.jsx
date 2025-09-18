@@ -1,10 +1,11 @@
 import './App.css'
+import HomePage from './Pages/HomePage'
 
 function App() {
 
   return (
    <>
-      <p>Test email extractor</p>
+      <HomePage/>
    </>
   )
 }

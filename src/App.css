@@ -1,0 +1,22 @@
+.container {
+  /* padding-inline: 8vw;  */
+  width: 90vw;
+  margin-inline: auto;
+
+
+  /* min-width: 100vw; */
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
