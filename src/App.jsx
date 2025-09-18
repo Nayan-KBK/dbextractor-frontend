@@ -4,7 +4,7 @@ function App() {
 
   return (
    <>
-   
+      <p>Test email extractor</p>
    </>
   )
 }
