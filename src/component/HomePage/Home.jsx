@@ -41,9 +41,6 @@ const Home = () => {
                         {/* Logo */}
 
 
-                        {/* <Link to="/" className="font-bold text-lg md:text-xl text-orange-500 cursor-pointer">
-                            onlinedbextractor
-                        </Link> */}
 
                         <Link
                             to="/"
