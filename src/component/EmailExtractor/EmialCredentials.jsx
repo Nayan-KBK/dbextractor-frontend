@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Sidebar from "./Sidebar";
 
 import { message } from "antd";
@@ -8,14 +8,19 @@ import { message } from "antd";
 
 const backendURL = import.meta.env.VITE_API_URL;
 
-export default function EmailCredentials({ setEmails, setSummary, }) {
+export default function EmailCredentials({ setEmails, setSummary, nextBtnHit ,prevBtnHit}) {
 
     // console.log("backendURL---------->",backendURL)
 
     // ✅ antd v5 hook
     const [messageApi, contextHolder] = message.useMessage();
 
-    const [fetchedPage, setCurrentPage] = useState(null)
+    const [currentFetchedPage, setCurrentFetchedPage] = useState(null)
+
+
+
+
+
 
 
 
@@ -47,8 +52,7 @@ export default function EmailCredentials({ setEmails, setSummary, }) {
 
 
 
-
-
+    // console.log("currentFetchedPage by nayan",currentFetchedPage)
     const fetchHeaders = async () => {
 
         setEmails([]);
@@ -96,6 +100,7 @@ export default function EmailCredentials({ setEmails, setSummary, }) {
             pageSize: formData.pageSize,
         };
 
+        setCurrentFetchedPage(Number(formData.page));
 
         console.log("payload------------->", payload)
 
@@ -129,7 +134,6 @@ export default function EmailCredentials({ setEmails, setSummary, }) {
                         try {
                             const json = JSON.parse(part);
 
-                            console.log("summury josn logs------------->".json)
 
 
                             // ✅ store summary info
@@ -138,7 +142,6 @@ export default function EmailCredentials({ setEmails, setSummary, }) {
                                 typeof json.totalPages !== "undefined" &&
                                 typeof json.currentPage !== "undefined"
                             ) {
-                                // console.log("summury josn logs------------->".json)
 
                                 setSummary({
                                     totalEmails: json.totalEmails,
@@ -146,7 +149,8 @@ export default function EmailCredentials({ setEmails, setSummary, }) {
                                     currentPage: json.currentPage,
                                 });
 
-                                setCurrentPage(json.currentPage)
+
+
 
                             }
 
@@ -188,7 +192,285 @@ export default function EmailCredentials({ setEmails, setSummary, }) {
 
 
 
+    const fetchNextPage = async () => {
 
+        console.log("inside here")
+
+        setEmails([]);
+        setSummary({
+            totalEmails: 0,
+            totalPages: 0,
+            currentPage: 0,
+        });
+
+
+        message.success("Emails fetched Starting!!!");
+
+        messageApi.success("Emails fetched Starting!!!");
+
+
+        console.log("inside fetchHeaders ")
+        let mailHost = "";
+        let mailPort = "";
+
+        // if user provided custom host/port
+        if (formData.provider === "select") {
+            mailHost = formData.host;
+            mailPort = formData.port || 993;
+        } else {
+            mailPort = 993; // default IMAP SSL port
+            if (formData.provider === "gmail") {
+                mailHost = "imap.gmail.com";
+            } else if (formData.provider === "hostinger") {
+                mailHost = "imap.hostinger.com";
+            } else if (formData.provider === "one") {
+                mailHost = "imap.one.com";
+            } else if (formData.provider === "godaddy") {
+                mailHost = "imap.secureserver.net";
+            }
+        }
+
+        // payload for backend
+        console.log(":currentFetchedPage--------->", currentFetchedPage)
+        console.log(":type of currentFetchedPage--------->", typeof (currentFetchedPage))
+        const payload = {
+            email: formData.userEmail,
+            password: formData.userPassword,
+            host: mailHost,
+            port: mailPort,
+            page: currentFetchedPage + 1,
+            tls: formData.tls,
+            pageSize: formData.pageSize,
+        };
+        setCurrentFetchedPage(currentFetchedPage + 1)
+
+
+        // console.log("payload------------->", payload)
+
+        try {
+            const response = await fetch(`${backendURL}/api/email/fetch-headers`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch emails");
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = "";
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+
+                // split chunks (assuming backend separates JSON objects with \n)
+                let parts = buffer.split("\n");
+                buffer = parts.pop(); // keep last incomplete part
+
+                for (const part of parts) {
+                    if (part.trim()) {
+                        try {
+                            const json = JSON.parse(part);
+
+
+
+                            // ✅ store summary info
+                            if (
+                                typeof json.totalEmails !== "undefined" &&
+                                typeof json.totalPages !== "undefined" &&
+                                typeof json.currentPage !== "undefined"
+                            ) {
+                                // console.log("summury josn logs------------->".json)
+
+                                setSummary({
+                                    totalEmails: json.totalEmails,
+                                    totalPages: json.totalPages,
+                                    currentPage: json.currentPage,
+                                });
+
+
+
+                            }
+
+                            // ✅ append chunk emails to state
+                            if (json.mails && Array.isArray(json.mails)) {
+                                setEmails((prev) => [...prev, ...json.mails]);
+                            }
+                        } catch (err) {
+                            console.warn("Failed to parse chunk:", part, err);
+                        }
+                    }
+                }
+            }
+            messageApi.success("Emails fetched End !");
+
+            // handle leftover
+            if (buffer.trim()) {
+                try {
+                    const json = JSON.parse(buffer);
+                    if (json.mails && Array.isArray(json.mails)) {
+                        setEmails((prev) => [...prev, ...json.mails]);
+                    }
+                } catch (err) {
+                    console.warn("Failed to parse leftover buffer:", buffer, err);
+                }
+
+                // message.success("Emails fetched End !");
+            }
+        } catch (err) {
+            // message.error("Failed to fetch emails!");
+            messageApi.error("Failed to fetch emails !");
+
+            console.error("Error fetching emails:", err);
+        }
+
+
+
+    };
+
+    const NextBtnHit = useRef(nextBtnHit);
+
+    useEffect(() => {
+        if (NextBtnHit.current !== nextBtnHit) {
+            fetchNextPage();
+            NextBtnHit.current = nextBtnHit;
+        }
+    }, [nextBtnHit]);
+
+
+
+
+
+
+
+
+
+    const fetchPrevPage = async () => {
+        if (currentFetchedPage <= 1) return; // prevent going below 1
+
+        console.log("inside fetchPrevPage");
+
+        setEmails([]);
+        setSummary({
+            totalEmails: 0,
+            totalPages: 0,
+            currentPage: 0,
+        });
+
+        message.success("Emails fetched Starting!!!");
+        messageApi.success("Emails fetched Starting!!!");
+
+        let mailHost = "";
+        let mailPort = "";
+
+        if (formData.provider === "select") {
+            mailHost = formData.host;
+            mailPort = formData.port || 993;
+        } else {
+            mailPort = 993;
+            if (formData.provider === "gmail") {
+                mailHost = "imap.gmail.com";
+            } else if (formData.provider === "hostinger") {
+                mailHost = "imap.hostinger.com";
+            } else if (formData.provider === "one") {
+                mailHost = "imap.one.com";
+            } else if (formData.provider === "godaddy") {
+                mailHost = "imap.secureserver.net";
+            }
+        }
+
+        const payload = {
+            email: formData.userEmail,
+            password: formData.userPassword,
+            host: mailHost,
+            port: mailPort,
+            page: currentFetchedPage - 1,
+            tls: formData.tls,
+            pageSize: formData.pageSize,
+        };
+
+        setCurrentFetchedPage(currentFetchedPage - 1);
+
+        try {
+            const response = await fetch(`${backendURL}/api/email/fetch-headers`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch emails");
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = "";
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+
+                let parts = buffer.split("\n");
+                buffer = parts.pop();
+
+                for (const part of parts) {
+                    if (part.trim()) {
+                        try {
+                            const json = JSON.parse(part);
+
+                            if (
+                                typeof json.totalEmails !== "undefined" &&
+                                typeof json.totalPages !== "undefined" &&
+                                typeof json.currentPage !== "undefined"
+                            ) {
+                                setSummary({
+                                    totalEmails: json.totalEmails,
+                                    totalPages: json.totalPages,
+                                    currentPage: json.currentPage,
+                                });
+                            }
+
+                            if (json.mails && Array.isArray(json.mails)) {
+                                setEmails((prev) => [...prev, ...json.mails]);
+                            }
+                        } catch (err) {
+                            console.warn("Failed to parse chunk:", part, err);
+                        }
+                    }
+                }
+            }
+            messageApi.success("Emails fetched End !");
+
+            if (buffer.trim()) {
+                try {
+                    const json = JSON.parse(buffer);
+                    if (json.mails && Array.isArray(json.mails)) {
+                        setEmails((prev) => [...prev, ...json.mails]);
+                    }
+                } catch (err) {
+                    console.warn("Failed to parse leftover buffer:", buffer, err);
+                }
+            }
+        } catch (err) {
+            messageApi.error("Failed to fetch emails !");
+            console.error("Error fetching emails:", err);
+        }
+    };
+
+    // Handle prevBtnHit changes
+    const PrevBtnHitRef = useRef(prevBtnHit);
+
+    useEffect(() => {
+        if (PrevBtnHitRef.current !== prevBtnHit) {
+            fetchPrevPage();
+            PrevBtnHitRef.current = prevBtnHit;
+        }
+    }, [prevBtnHit]);
 
 
 

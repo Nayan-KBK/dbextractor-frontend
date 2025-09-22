@@ -15,7 +15,7 @@ import { saveAs } from "file-saver";
 
 
 
-export default function EmailExtractor({ emails, summary }) {
+export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrevBtnHit }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(50); // default 50 per page
 
@@ -350,21 +350,22 @@ export default function EmailExtractor({ emails, summary }) {
                     {/* Prev button */}
                     <Button
                         type="default"
-                        disabled={currentPage <= 1}
-                    // onClick={() => onPageChange(currentPage - 1)}
+                        disabled={summary.currentPage <= 1}
+                        onClick={() => setPrevBtnHit((prev) => prev + 1)}
                     >
                         Prev
                     </Button>
 
                     {/* Next button */}
                     <Button
+                        disabled={
+                            summary.totalPages <= summary.currentPage
+                        }
                         type="default"
-                        disabled={currentPage >= totalPages}
-                    // onClick={() => onPageChange(currentPage + 1)}
+                        onClick={() => setNextBtnHit((prev) => prev + 1)}
                     >
                         Next
                     </Button>
-
                 </div>
 
             </div>

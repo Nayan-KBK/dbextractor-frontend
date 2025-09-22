@@ -6,6 +6,9 @@ export default function EmailExtractorPage() {
 
 
   const [emails, setEmails] = useState([]);
+  const [nextBtnHit,setNextBtnHit] = useState(0)
+  const [prevBtnHit,setPrevBtnHit] = useState(0)
+
 
   const [summary, setSummary] = useState({
     totalEmails: 0,
@@ -14,8 +17,8 @@ export default function EmailExtractorPage() {
   });
   return (
     <>
-      <EmialCredentials emails={emails} setEmails={setEmails} setSummary={setSummary} />
-      <EmailExtractor emails={emails} summary={summary} />
+      <EmialCredentials emails={emails} setEmails={setEmails} setSummary={setSummary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit}/>
+      <EmailExtractor emails={emails } summary={summary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit}/>
     </>
   )
 }
