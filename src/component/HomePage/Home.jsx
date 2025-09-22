@@ -55,13 +55,13 @@ const Home = () => {
 
                         {/* Nav Links (Desktop) */}
                         <div className="hidden md:flex justify-center items-center gap-6 w-1/3">
-                            <p className="cursor-pointer hover:text-orange-400 transition-colors" onClick={() => handleNavClick("about")}>
+                            <p className="cursor-pointer hover:text-orange-400 transition-colors !mb-0" onClick={() => handleNavClick("about")}>
                                 About Us
                             </p>
-                            <p className="cursor-pointer hover:text-orange-400 transition-colors" onClick={() => handleNavClick("how-it-works")}>
+                            <p className="cursor-pointer hover:text-orange-400 transition-colors !mb-0" onClick={() => handleNavClick("how-it-works")}>
                                 How It Works
                             </p>
-                            <p className="cursor-pointer hover:text-orange-400 transition-colors" onClick={() => handleNavClick("faq")}>
+                            <p className="cursor-pointer hover:text-orange-400 transition-colors !mb-0" onClick={() => handleNavClick("faq")}>
                                 FAQ
                             </p>
 
@@ -169,7 +169,7 @@ const Home = () => {
             >
                 {/* Left Content */}
                 <div className="md:w-1/2 text-left">
-                    <div className="text-sm md:text-base font-normal mb-3 text-gray-600">
+                    <div className="text-sm md:text-2xl font-extrabold mb-3 text-black">
                         About us
                     </div>
 
