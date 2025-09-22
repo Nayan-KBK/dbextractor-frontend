@@ -8,7 +8,7 @@ export default function EmailExtractorPage() {
   const [emails, setEmails] = useState([]);
   const [nextBtnHit, setNextBtnHit] = useState(0)
   const [prevBtnHit, setPrevBtnHit] = useState(0)
-  const [CredentialPanel, setCredentialPanel] = useState(false)
+  const [CredentialPanel, setCredentialPanel] = useState(true)
 
 
 

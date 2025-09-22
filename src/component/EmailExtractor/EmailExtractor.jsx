@@ -14,6 +14,10 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { MoveLeft } from "lucide-react";
 
+import LoginAnimation from '../../assets/animations/Loading.lottie'
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
+
 
 
 export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrevBtnHit, setCredentialPanel }) {
@@ -157,9 +161,6 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
         saveAs(file, "emails.xlsx");
     };
 
-
-    const { totalPages } = summary;
-
     const parseContact = (raw) => {
         raw = raw.trim();
         // Match "Name <email>" or just "email"
@@ -273,164 +274,179 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
 
 
     return (
-        <div className="w-[90vw] mx-auto rounded-xl min-h-[86vh] mt-[2vh]">
-            <div onClick={() => { setCredentialPanel(true); console.log("nayan") }}
-                className="cursor-pointer bg-red-400/20 w-fit flex items-center px-3 gap-3 rounded-md"
-            >
-                <MoveLeft size={30} strokeWidth={2} />
-                <p className="!mb-0"> Back</p>
-            </div>
-            <h2 className="text-xl font-semibold mb-4">Fetched Emails</h2>
 
-
-            <div className="flex justify-between">
-
-                <div className="flex flex-wrap gap-2 mb-4 text-sm">
-                    {Object.keys(folderCounts).length > 0 ? (
-                        Object.entries(folderCounts).map(([folder, count]) => {
-                            const folderKey = folder.toLowerCase();
-
-                            const iconMap = {
-                                inbox: InboxIcon,
-                                "inbox.sent": InboxSent,
-                                "inbox.trash": InboxTrash,
-                                "inbox.spam": InboxSpam,
-                                "inbox.drafts": InboxFolder,
-                            };
-
-                            const iconSrc = iconMap[folderKey] || InboxFolder;
-                            const exactFolder = folder === "INBOX" ? "INBOX" : folder.split(".").pop();
-
-                            return (
-                                <span
-                                    key={folder}
-                                    className="px-4 py-2 bg-blue-100 rounded flex items-center gap-2"
-                                >
-                                    <img
-                                        src={typeof iconSrc === "string" ? iconSrc : iconSrc.src}
-                                        alt={folder}
-                                        className="w-5 h-5 object-contain"
-                                        onError={(e) => (e.target.src = InboxFolder)}
-                                    />
-                                    <span className="capitalize">{exactFolder}:</span>
-                                    <strong>{count}</strong>
-                                </span>
-                            );
-                        })
-                    ) : (
-                        <span className="px-4 py-2 bg-gray-100 rounded flex items-center gap-2">
-                            <img
-                                src={InboxFolder}
-                                alt="No Folder"
-                                className="w-5 h-5 object-contain"
-                                onError={(e) => (e.target.src = InboxFolder)}
-                            />
-                            <span>No Folder</span>
-                        </span>
-                    )}
+        <>
+            {summary.totalEmails === 0 && <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="w-1/2 ">
+                    <DotLottieReact
+                        src={LoginAnimation}
+                        autoplay
+                        loop={true}
+                        speed={0.8}
+                    />
                 </div>
+            </div>}
 
-
-                <Button type="primary" onClick={() => downloadEmailsAsExcel(emails)}>
-                    Download Emails
-                </Button>
-
-            </div>
-
-
-
-
-
-
-
-
-            {/* Top summary */}
-
-            <div className="flex justify-between mt-5">
-
-                <div className="flex gap-6 mb-4 text-lg font-medium">
-                    <span>Total Emails: {summary.totalEmails}</span>
-                    <span>Total Pages: {summary.totalPages}</span>
-                    <span>Current Page: {summary.currentPage}</span>
+            <div className="w-[90vw] mx-auto rounded-xl min-h-[86vh] mt-[2vh]">
+                <div onClick={() => { setCredentialPanel(true); console.log("nayan") }}
+                    className="cursor-pointer bg-red-400/20 w-fit flex items-center px-3 gap-3 rounded-md"
+                >
+                    <MoveLeft size={30} strokeWidth={2} />
+                    <p className="!mb-0"> Back</p>
                 </div>
-                <div className="flex gap-4 my-4">
-                    {/* Prev button */}
-                    <Button
-                        type="default"
-                        disabled={summary.currentPage <= 1}
-                        onClick={() => setPrevBtnHit((prev) => prev + 1)}
-                    >
-                        Prev
+                <h2 className="text-xl font-semibold mb-4">Fetched Emails</h2>
+
+
+                <div className="flex justify-between">
+
+                    <div className="flex flex-wrap gap-2 mb-4 text-sm">
+                        {Object.keys(folderCounts).length > 0 ? (
+                            Object.entries(folderCounts).map(([folder, count]) => {
+                                const folderKey = folder.toLowerCase();
+
+                                const iconMap = {
+                                    inbox: InboxIcon,
+                                    "inbox.sent": InboxSent,
+                                    "inbox.trash": InboxTrash,
+                                    "inbox.spam": InboxSpam,
+                                    "inbox.drafts": InboxFolder,
+                                };
+
+                                const iconSrc = iconMap[folderKey] || InboxFolder;
+                                const exactFolder = folder === "INBOX" ? "INBOX" : folder.split(".").pop();
+
+                                return (
+                                    <span
+                                        key={folder}
+                                        className="px-4 py-2 bg-blue-100 rounded flex items-center gap-2"
+                                    >
+                                        <img
+                                            src={typeof iconSrc === "string" ? iconSrc : iconSrc.src}
+                                            alt={folder}
+                                            className="w-5 h-5 object-contain"
+                                            onError={(e) => (e.target.src = InboxFolder)}
+                                        />
+                                        <span className="capitalize">{exactFolder}:</span>
+                                        <strong>{count}</strong>
+                                    </span>
+                                );
+                            })
+                        ) : (
+                            <span className="px-4 py-2 bg-gray-100 rounded flex items-center gap-2">
+                                <img
+                                    src={InboxFolder}
+                                    alt="No Folder"
+                                    className="w-5 h-5 object-contain"
+                                    onError={(e) => (e.target.src = InboxFolder)}
+                                />
+                                <span>No Folder</span>
+                            </span>
+                        )}
+                    </div>
+
+
+                    <Button type="primary" onClick={() => downloadEmailsAsExcel(emails)}>
+                        Download Emails
                     </Button>
 
-                    {/* Next button */}
-                    <Button
-                        disabled={
-                            summary.totalPages <= summary.currentPage
-                        }
-                        type="default"
-                        onClick={() => setNextBtnHit((prev) => prev + 1)}
-                    >
-                        Next
+                </div>
+
+
+
+
+
+
+
+
+                {/* Top summary */}
+
+                <div className="flex justify-between mt-5">
+
+                    <div className="flex gap-6 mb-4 text-lg font-medium">
+                        <span>Total Emails: {summary.totalEmails}</span>
+                        <span>Total Pages: {summary.totalPages}</span>
+                        <span>Current Page: {summary.currentPage}</span>
+                    </div>
+                    <div className="flex gap-4 my-4">
+                        {/* Prev button */}
+                        <Button
+                            type="default"
+                            disabled={summary.currentPage <= 1}
+                            onClick={() => setPrevBtnHit((prev) => prev + 1)}
+                        >
+                            Prev
+                        </Button>
+
+                        {/* Next button */}
+                        <Button
+                            disabled={
+                                summary.totalPages <= summary.currentPage
+                            }
+                            type="default"
+                            onClick={() => setNextBtnHit((prev) => prev + 1)}
+                        >
+                            Next
+                        </Button>
+                    </div>
+
+                </div>
+
+
+
+                <Table
+                    columns={columns}
+                    dataSource={dataSource}
+                    pagination={{
+                        current: currentPage,
+                        pageSize,
+                        showSizeChanger: true,  // ✅ allows user to change page size
+                        pageSizeOptions: ["50", "100", "200", "500", "1000"], // ✅ dropdown options
+                        onChange: (page, size) => {
+                            setCurrentPage(page);
+                            setPageSize(size); // ✅ update dynamically
+                        },
+                    }}
+                    scroll={{ y: 500 }}
+                />
+
+                <div className="h-[1px] w-full my-10 bg-gradient-to-r from-transparent via-gray-900 to-transparent"></div>
+
+                {/* unique mails */}
+
+
+
+                <div className="flex justify-between">
+
+
+                    <div className="flex gap-6 mb-4 text-lg font-medium">
+                        <span>Total Unique Emails: {uniqueContacts.length}</span>
+                        <span>Total Pages: {summary.totalPages}</span>
+                        <span>Current Page: {summary.currentPage}</span>
+                    </div>
+
+                    <Button type="primary" className="mb-4" onClick={exportToExcel}>
+                        Download Excel
                     </Button>
                 </div>
 
+                <Table
+                    columns={uniqueColumns}
+                    dataSource={uniqueContacts}
+                    pagination={{
+                        current: uniqueCurrentPage,
+                        pageSize: uniquePageSize,
+                        showSizeChanger: true,
+                        pageSizeOptions: ["50", "100", "200", "500", "1000"],
+                        onChange: (page, size) => {
+                            setUniqueCurrentPage(page);
+                            setUniquePageSize(size);
+                        },
+                    }}
+                    scroll={{ y: 500 }}
+                />
+
             </div>
 
-
-
-            <Table
-                columns={columns}
-                dataSource={dataSource}
-                pagination={{
-                    current: currentPage,
-                    pageSize,
-                    showSizeChanger: true,  // ✅ allows user to change page size
-                    pageSizeOptions: ["50", "100", "200", "500", "1000"], // ✅ dropdown options
-                    onChange: (page, size) => {
-                        setCurrentPage(page);
-                        setPageSize(size); // ✅ update dynamically
-                    },
-                }}
-                scroll={{ y: 500 }}
-            />
-
-            <div className="h-[1px] w-full my-10 bg-gradient-to-r from-transparent via-gray-900 to-transparent"></div>
-
-            {/* unique mails */}
-
-
-
-            <div className="flex justify-between">
-
-
-                <div className="flex gap-6 mb-4 text-lg font-medium">
-                    <span>Total Unique Emails: {uniqueContacts.length}</span>
-                    <span>Total Pages: {summary.totalPages}</span>
-                    <span>Current Page: {summary.currentPage}</span>
-                </div>
-
-                <Button type="primary" className="mb-4" onClick={exportToExcel}>
-                    Download Excel
-                </Button>
-            </div>
-
-            <Table
-                columns={uniqueColumns}
-                dataSource={uniqueContacts}
-                pagination={{
-                    current: uniqueCurrentPage,
-                    pageSize: uniquePageSize,
-                    showSizeChanger: true,
-                    pageSizeOptions: ["50", "100", "200", "500", "1000"],
-                    onChange: (page, size) => {
-                        setUniqueCurrentPage(page);
-                        setUniquePageSize(size);
-                    },
-                }}
-                scroll={{ y: 500 }}
-            />
-
-        </div>
+        </>
     );
 }

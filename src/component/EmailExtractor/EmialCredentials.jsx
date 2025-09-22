@@ -102,7 +102,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
 
         setCurrentFetchedPage(Number(formData.page));
 
-        console.log("payload------------->", payload)
+        // console.log("payload------------->", payload)
 
         try {
             const response = await fetch(`${backendURL}/api/email/fetch-headers`, {
