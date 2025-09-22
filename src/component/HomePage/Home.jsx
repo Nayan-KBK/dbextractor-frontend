@@ -73,7 +73,7 @@ const Home = () => {
                                 <button className="bg-gray-300 rounded-lg px-5 py-2 cursor-pointer">Login</button>
                             </Link>
                             <Link to="/login">
-                                <button className="bg-black text-white border border-black rounded-lg px-5 py-2 cursor-pointer">
+                                <button className="bg-black !text-white border border-black rounded-lg px-5 py-2 cursor-pointer">
                                     Create An Account
                                 </button>
                             </Link>
@@ -99,14 +99,14 @@ const Home = () => {
                             <p className="cursor-pointer" onClick={() => handleNavClick("faq")}>
                                 FAQ
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-4 w-full mt-2">
+                            <div className="flex flex-col justify-center sm:flex-row gap-4 w-full mt-2">
                                 <Link to="/login">
                                     <button className="bg-gray-400 rounded-lg px-5 py-2 w-full cursor-pointer">
                                         Login
                                     </button>
                                 </Link>
                                 <Link to="/login">
-                                    <button className="bg-black text-white border border-black rounded-lg px-5 py-2 w-full cursor-pointer">
+                                    <button className="bg-black !text-white border border-black rounded-lg px-5 py-2 w-full cursor-pointer ">
                                         Create An Account
                                     </button>
                                 </Link>
