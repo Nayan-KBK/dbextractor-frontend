@@ -6,8 +6,10 @@ export default function EmailExtractorPage() {
 
 
   const [emails, setEmails] = useState([]);
-  const [nextBtnHit,setNextBtnHit] = useState(0)
-  const [prevBtnHit,setPrevBtnHit] = useState(0)
+  const [nextBtnHit, setNextBtnHit] = useState(0)
+  const [prevBtnHit, setPrevBtnHit] = useState(0)
+  const [CredentialPanel, setCredentialPanel] = useState(false)
+
 
 
   const [summary, setSummary] = useState({
@@ -17,8 +19,12 @@ export default function EmailExtractorPage() {
   });
   return (
     <>
-      <EmialCredentials emails={emails} setEmails={setEmails} setSummary={setSummary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit}/>
-      <EmailExtractor emails={emails } summary={summary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit}/>
+      {CredentialPanel ?
+        <EmialCredentials emails={emails} setEmails={setEmails} setSummary={setSummary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit} setCredentialPanel={setCredentialPanel} />
+        :
+
+        <EmailExtractor emails={emails} summary={summary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit} setCredentialPanel={setCredentialPanel} />
+      }
     </>
   )
 }

@@ -8,7 +8,7 @@ import { message } from "antd";
 
 const backendURL = import.meta.env.VITE_API_URL;
 
-export default function EmailCredentials({ setEmails, setSummary, nextBtnHit ,prevBtnHit}) {
+export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, prevBtnHit, setCredentialPanel }) {
 
     // console.log("backendURL---------->",backendURL)
 
@@ -54,7 +54,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit ,pr
 
     // console.log("currentFetchedPage by nayan",currentFetchedPage)
     const fetchHeaders = async () => {
-
+        setCredentialPanel(false)
         setEmails([]);
         setSummary({
             totalEmails: 0,

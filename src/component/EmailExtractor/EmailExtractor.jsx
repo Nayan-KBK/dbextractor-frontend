@@ -12,10 +12,11 @@ import InboxFolder from '../../assets/folder.png';
 
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { MoveLeft } from "lucide-react";
 
 
 
-export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrevBtnHit }) {
+export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrevBtnHit, setCredentialPanel }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(50); // default 50 per page
 
@@ -273,6 +274,12 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
 
     return (
         <div className="w-[90vw] mx-auto rounded-xl min-h-[86vh] mt-[2vh]">
+            <div onClick={() => { setCredentialPanel(true); console.log("nayan") }}
+                className="cursor-pointer bg-red-400/20 w-fit flex items-center px-3 gap-3 rounded-md"
+            >
+                <MoveLeft size={30} strokeWidth={2} />
+                <p className="!mb-0"> Back</p>
+            </div>
             <h2 className="text-xl font-semibold mb-4">Fetched Emails</h2>
 
 
