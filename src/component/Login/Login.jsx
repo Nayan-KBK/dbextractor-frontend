@@ -75,7 +75,7 @@ export default function Login() {
 
 
 
-                    {/* <div className="flex flex-col justify-around  "> */} 
+                    {/* <div className="flex flex-col justify-around  "> */}
 
 
                     <div className="md:w-1/2 w-full flex flex-col justify-center  md:h-[80vh] h-fit mb-5">
@@ -133,7 +133,7 @@ export default function Login() {
                                         type="email"
                                         placeholder="Enter email"
                                         name="email"
-                                        className="p-2 rounded placeholder-gray-400 text-black bg-white focus:outline-none focus:ring-0 text-sm"
+                                        className="p-2 rounded placeholder-gray-400 !text-black bg-white focus:outline-none focus:ring-0 text-sm"
                                         value={formData.email}
                                         onChange={handleChange}
                                     />
@@ -146,7 +146,7 @@ export default function Login() {
                                         type="password"
                                         name="password"
                                         placeholder="Password"
-                                        className="p-2 rounded placeholder-gray-400 text-black bg-white focus:outline-none focus:ring-0"
+                                        className="p-2 rounded placeholder-gray-400 !text-black bg-white focus:outline-none focus:ring-0"
                                         value={formData.password}
                                         onChange={handleChange}
                                     />
@@ -158,7 +158,7 @@ export default function Login() {
                                         }`}
                                     disabled={loading}
                                 >
-                                   <p className='font-bold'> Login</p>
+                                    <p className='font-bold !mb-0'> Login</p>
                                 </button>
                             </form>
                         </div>
