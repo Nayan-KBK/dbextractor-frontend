@@ -45,7 +45,7 @@ export default function Sidebar({ setIsLoggedIn }) {
             {/* Toggle Button */}
             <button
                 onClick={() => setShowForm(!showForm)}
-                className="absolute top-4 right-4 z-50 bg-black bg-opacity-70 text-white p-2 rounded-full cursor-pointer"
+                className="absolute top-4 right-4 z-50 bg-black bg-opacity-70 !text-white p-2 rounded-full cursor-pointer"
             >
                 {showForm ? <X size={24} /> : <AlignJustify size={24} />}
             </button>

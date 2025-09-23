@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import EmialCredentials from '../component/EmailExtractor/EmialCredentials'
 import EmailExtractor from '../component/EmailExtractor/EmailExtractor'
 
@@ -12,6 +12,14 @@ export default function EmailExtractorPage() {
 
 
 
+  const extractorRef = useRef(null);
+
+
+  const scrollToExtractor = () => {
+    extractorRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+
   const [summary, setSummary] = useState({
     totalEmails: 0,
     totalPages: 0,
@@ -19,12 +27,17 @@ export default function EmailExtractorPage() {
   });
   return (
     <>
-      {CredentialPanel ?
-        <EmialCredentials emails={emails} setEmails={setEmails} setSummary={setSummary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit} setCredentialPanel={setCredentialPanel} />
-        :
+      {/* {CredentialPanel ? */}
 
-        <EmailExtractor emails={emails} summary={summary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit} setCredentialPanel={setCredentialPanel} />
-      }
+
+      <EmialCredentials emails={emails} setEmails={setEmails} setSummary={setSummary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit} setCredentialPanel={setCredentialPanel} scrollToExtractor={scrollToExtractor}/>
+      {/* : */}
+
+      <div ref={extractorRef}>
+
+      <EmailExtractor emails={emails} summary={summary} nextBtnHit={nextBtnHit} setNextBtnHit={setNextBtnHit} setPrevBtnHit={setPrevBtnHit} prevBtnHit={prevBtnHit} setCredentialPanel={setCredentialPanel} CredentialPanel={CredentialPanel} />
+      </div>
+      {/* } */}
     </>
   )
 }

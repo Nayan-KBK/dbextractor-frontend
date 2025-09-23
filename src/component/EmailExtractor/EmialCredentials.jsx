@@ -8,11 +8,10 @@ import { message } from "antd";
 
 const backendURL = import.meta.env.VITE_API_URL;
 
-export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, prevBtnHit, setCredentialPanel }) {
+export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, prevBtnHit, setCredentialPanel, scrollToExtractor }) {
 
     // console.log("backendURL---------->",backendURL)
 
-    // ✅ antd v5 hook
     const [messageApi, contextHolder] = message.useMessage();
 
     const [currentFetchedPage, setCurrentFetchedPage] = useState(null)
@@ -54,6 +53,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
 
     // console.log("currentFetchedPage by nayan",currentFetchedPage)
     const fetchHeaders = async () => {
+        scrollToExtractor()
         setCredentialPanel(false)
         setEmails([]);
         setSummary({
@@ -194,7 +194,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
 
     const fetchNextPage = async () => {
 
-        console.log("inside here")
+        console.log("inside next page")
 
         setEmails([]);
         setSummary({
@@ -350,6 +350,10 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
 
 
 
+
+
+
+
     const fetchPrevPage = async () => {
         if (currentFetchedPage <= 1) return; // prevent going below 1
 
@@ -481,7 +485,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
 
     return (
 
-        <div className="w-[90vw]  mx-auto shadow-md rounded-xl min-h-[86vh] flex flex-col lg:flex-row mt-[2vh]">
+        <div className="w-[90vw]  mx-auto my-auto shadow-md rounded-xl h-[94vh] flex flex-col lg:flex-row">
             {/* Left Form Section */}
             {contextHolder}
             <div className="form w-full lg:w-1/2 rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none bg-white relative">

@@ -20,7 +20,7 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 
 
-export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrevBtnHit, setCredentialPanel }) {
+export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrevBtnHit, setCredentialPanel, nextBtnHit, CredentialPanel }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(50); // default 50 per page
 
@@ -276,7 +276,7 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
     return (
 
         <>
-            {summary.totalEmails === 0 && <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+            {/* {summary.totalEmails === 0 && <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
                 <div className="w-1/2 ">
                     <DotLottieReact
                         src={LoginAnimation}
@@ -285,15 +285,9 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
                         speed={0.8}
                     />
                 </div>
-            </div>}
+            </div>} */}
 
-            <div className="w-[90vw] mx-auto rounded-xl min-h-[86vh] mt-[2vh]">
-                <div onClick={() => { setCredentialPanel(true); console.log("nayan") }}
-                    className="cursor-pointer bg-red-400/20 w-fit flex items-center px-3 gap-3 rounded-md"
-                >
-                    <MoveLeft size={30} strokeWidth={2} />
-                    <p className="!mb-0"> Back</p>
-                </div>
+            <div className="w-[90vw] mx-auto rounded-xl min-h-[86vh] mt-[10vh]">
                 <h2 className="text-xl font-semibold mb-4">Fetched Emails</h2>
 
 
@@ -383,7 +377,10 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
                                 summary.totalPages <= summary.currentPage
                             }
                             type="default"
-                            onClick={() => setNextBtnHit((prev) => prev + 1)}
+                            onClick={() => {
+                                setNextBtnHit(prev => prev + 1);
+                                console.log("Next Btn Hit:", nextBtnHit + 1);
+                            }}
                         >
                             Next
                         </Button>
@@ -445,7 +442,7 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
                     scroll={{ y: 500 }}
                 />
 
-            </div>
+            </div >
 
         </>
     );
