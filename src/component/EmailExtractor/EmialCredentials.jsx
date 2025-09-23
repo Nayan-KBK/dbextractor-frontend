@@ -38,11 +38,33 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
 
 
     // global change handler for all inputs
+    // const handleChange = (e) => {
+    //     const { name, type, value, checked } = e.target;
+
+
+
+    //     setFormData((prev) => ({
+    //         ...prev,
+    //         [name]: type === "checkbox" ? checked : value,
+    //     }));
+    // };
+
+
+    // global change handler for all inputs
     const handleChange = (e) => {
         const { name, type, value, checked } = e.target;
+
+        let newValue = type === "checkbox" ? checked : value;
+
+        // Restrict pageSize to max 20000
+        if (name === "pageSize") {
+            const numericValue = parseInt(value, 10) || 0;
+            newValue = numericValue > 20000 ? 20000 : numericValue;
+        }
+
         setFormData((prev) => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: newValue,
         }));
     };
 
@@ -485,7 +507,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
 
     return (
 
-        <div className="w-[90vw]  mx-auto my-auto shadow-md rounded-xl h-[94vh] flex flex-col lg:flex-row">
+        <div className="w-[90vw]  mx-auto my-auto shadow-md rounded-xl h-auto flex flex-col lg:flex-row">
             {/* Left Form Section */}
             {contextHolder}
             <div className="form w-full lg:w-1/2 rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none bg-white relative">
@@ -531,6 +553,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
                         value={formData.pageSize}
                         onChange={handleChange}
                     />
+                    <p className="text-red-500">Note: Max email Fetch size is 20,000 </p>
 
                     {/* Provider / Manual host toggle */}
                     <div className="flex flex-col relative">
@@ -570,7 +593,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
                         )}
 
                         {formData.enabled && (
-                            <div className="space-y-2 flex flex-col">
+                            <div className="gap-y-3 flex flex-col">
                                 <input
                                     type="text"
                                     name="host"
@@ -587,7 +610,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
                                     onChange={handleChange}
                                     className="border border-gray-300 rounded px-2 py-1 w-full sm:w-2/3"
                                 />
-                                <div className="flex items-center space-x-2">
+                                <div className="flex items-center gap-x-2">
                                     <input
                                         type="checkbox"
                                         name="tls"
@@ -617,7 +640,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
                     </div>
 
                     <button
-                        className={`px-6 py-2 rounded w-[60%] sm:w-[40%] text-white ${!formData.userEmail ||
+                        className={`px-6 py-2 rounded w-[60%] sm:w-[40%] !text-white ${!formData.userEmail ||
                             !formData.userPassword ||
                             (
                                 formData.provider === "select" &&
