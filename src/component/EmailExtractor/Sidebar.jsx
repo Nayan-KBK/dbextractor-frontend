@@ -60,14 +60,21 @@ export default function Sidebar({ setIsLoggedIn }) {
                         <span>Home</span>
                         <Shell size={20} />
                     </p>
+
+                    
                     {role === 'admin' && <p className="backdrop-blur-md cursor-pointer rounded  hover:text-blue-800 text-black p-2 w-full flex justify-end items-center gap-x-2" onClick={() => { setActiveTab('create'); setShowForm(!showForm) }}>
                         <span>Create User</span>
                         <UserPlus size={20} />
                     </p>}
+
+
                     <p className="backdrop-blur-md cursor-pointer rounded hover:text-blue-800 text-black p-2 w-full flex justify-end items-center gap-x-2" onClick={() => { setActiveTab('forgot'); setShowForm(!showForm) }}>
                         <span>Forgot Password</span>
                         <RotateCcwKey size={20} />
                     </p>
+
+
+
                     <p className="backdrop-blur-md cursor-pointer rounded hover:text-blue-800 text-black p-2 w-full flex justify-end items-center gap-x-2" onClick={() => { setIsLoggedIn(false); localStorage.removeItem("mail"); navigate('/'); localStorage.removeItem('role') }}>
                         <span>Logout</span>
                         <Power size={20} />
@@ -198,7 +205,7 @@ function CreateUserUI({ setActiveTab }) {
 
 
 
-            <div className="flex flex-col max-w-md mx-auto  space-y-5 px-6 ">
+            <div className="flex flex-col max-w-md mx-auto  gap-y-5 px-6 ">
                 <h2 className="text-2xl">Create User</h2>
 
                 <input
@@ -207,7 +214,7 @@ function CreateUserUI({ setActiveTab }) {
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleCreateUserChange}
-                    className="border border-blue-200 rounded px-4 py-2"
+                    className="border border-blue-200 rounded px-4 py-2 "
                 />
 
 
@@ -393,7 +400,7 @@ function ForgotPassword() {
                 <input
                     type="email"
                     placeholder="Enter your email"
-                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring focus:ring-blue-200"
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring focus:ring-blue-200 !mb-5 hover:cursor-not-allowed"
                     value={email}
                     // onChange={(e) => setEmail(e.target.value)}
                     disabled
