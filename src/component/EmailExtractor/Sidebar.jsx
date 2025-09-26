@@ -61,7 +61,7 @@ export default function Sidebar({ setIsLoggedIn }) {
                         <Shell size={20} />
                     </p>
 
-                    
+
                     {role === 'admin' && <p className="backdrop-blur-md cursor-pointer rounded  hover:text-blue-800 text-black p-2 w-full flex justify-end items-center gap-x-2" onClick={() => { setActiveTab('create'); setShowForm(!showForm) }}>
                         <span>Create User</span>
                         <UserPlus size={20} />
@@ -329,6 +329,7 @@ function ForgotPassword() {
     };
 
     const handleRequestOtp = async () => {
+        console.log("call otp")
         setLoadSendOtp(true)
         if (!email) {
             toast.error("Email is required");
@@ -336,7 +337,9 @@ function ForgotPassword() {
         }
 
         try {
+            console.log("inside try")
             const res = await axios.post(`${apiUrl}/api/users/send-otp`, { email });
+            console.log("after api", res)
             if (res.status === 200) {
                 setOtpRequested(true);
                 toast.success("OTP sent to your email");
