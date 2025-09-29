@@ -3,7 +3,7 @@ import './App.css'
 import HomePage from './Pages/HomePage'
 import LoginPage from './Pages/LoginPage'
 import EmailExtractorPage from './Pages/EmailExtractorPage'
-
+import "antd/dist/reset.css"; 
 function App() {
 
   return (

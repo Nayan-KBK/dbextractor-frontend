@@ -181,7 +181,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
                                 setEmails((prev) => [...prev, ...json.mails]);
                             }
                         } catch (err) {
-                            console.warn("Failed to parse chunk:", part, err);
+                            console.warn("Failed to parse chunk:", part, err);  
                         }
                     }
                 }

@@ -4,13 +4,18 @@ import emailAnimation from '../../assets/Email.lottie'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
+import { notification } from "antd";
+
 
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { Spin, message } from 'antd';
 
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Login() {
+
+    const [messageApi, contextHolder] = message.useMessage();
 
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false)
@@ -27,6 +32,7 @@ export default function Login() {
     }
 
     const handleSubmit = async (e) => {
+     
         setLoading(true)
         const payload = {
             email: formData.email,
@@ -43,7 +49,8 @@ export default function Login() {
 
         } catch (error) {
             console.error('❌ Login failed:', error.response?.data || error.message)
-            alert(error.response?.data?.error || 'Login failed')
+            messageApi.error(error.response?.data?.error || "Login failed"); 
+
         } finally {
             setLoading(false)
         }
@@ -53,7 +60,7 @@ export default function Login() {
     return (
 
         <>
-
+            {contextHolder}
 
             <div className={`bg-[url('./assets/loginBg.png')]   bg-cover bg-center h-screen w-full flex justify-center items-center text-white `}>
 
@@ -75,53 +82,10 @@ export default function Login() {
 
 
 
-                    {/* <div className="flex flex-col justify-around  "> */}
 
 
                     <div className="md:w-1/2 w-full flex flex-col justify-center  md:h-[80vh] h-fit mb-5">
                         <h2 className="text-3xl font-bold  text-center md:text-left mb-5"> Login</h2>
-
-                        {/* <form className="space-y-4 " onSubmit={handleSubmit}>
-
-                                <div className="flex flex-col">
-                                    <label htmlFor="email">Email Id</label>
-                                    <input
-                                        required
-                                        type="email"
-                                        placeholder="Enter email"
-                                        name="email"
-                                        className="p-2 rounded lg:w-1/2 w-2/3  placeholder-gray-400 text-black bg-white focus:outline-none focus:ring-0 text-sm "
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                    />
-                                   
-                                </div>
-                                <div className=" flex flex-col ">
-                                  
-                                    <label htmlFor="password">Password</label>
-                                    <input
-                                        required
-                                        type="password"
-                                        name="password"
-                                        placeholder="Password"
-                                        className="p-2 rounded lg:w-1/2 w-2/3 placeholder-gray-400 text-black bg-white focus:outline-none focus:ring-0"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-
-
-                                <button
-                                    type="submit"
-                                className={`lg:w-1/2 w-2/3 py-2 text-black bg-[#00E0C2] hover:shadow-lg rounded-md font-medium transition ${!loading ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
-                                        }`}
-                                    disabled={loading}
-                                >
-                                    Login
-                                </button>
-
-                            </form> */}
 
 
                         <div className="flex justify-center md:justify-start items-center ">
@@ -154,11 +118,11 @@ export default function Login() {
 
                                 <button
                                     type="submit"
-                                    className={`w-full py-2 text-black bg-[#00E0C2] hover:shadow-lg rounded-md font-medium transition ${!loading ? 'cursor-pointer' : 'cursor-not-allowed opacity-50 '
+                                    className={`w-full py-2 text-black bg-[#00E0C2] hover:shadow-lg rounded-md font-medium transition ${!loading ? 'cursor-pointer' : 'cursor-not-allowed opacity-80 '
                                         }`}
                                     disabled={loading}
                                 >
-                                    <p className='font-bold !mb-0'> Login</p>
+                                    <div className='font-bold !mb-0 text-black'>{loading && <Spin />}Login  </div>
                                 </button>
                             </form>
                         </div>
@@ -167,7 +131,7 @@ export default function Login() {
                     </div>
 
 
-                    {/* </div> */}
+
 
 
 
