@@ -20,13 +20,15 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 
 
-export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrevBtnHit, setCredentialPanel, nextBtnHit, CredentialPanel }) {
+export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrevBtnHit, setCredentialPanel, nextBtnHit, CredentialPanel, timer }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(50); // default 50 per page
-
-
-
     const [uniqueContacts, setUniqueContacts] = useState([]);
+
+
+
+
+
 
     useEffect(() => {
         const contacts = getUniqueContacts(emails);
@@ -37,6 +39,7 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
         { title: "Sr. No", dataIndex: "key", key: "key", width: 80 },
         { title: "Name", dataIndex: "name", key: "name", render: (text) => text || "-", width: 500 },
         { title: "Email", dataIndex: "email", key: "email" },
+        { title: "Mobile", dataIndex: "phone", key: "phone" },
     ];
 
 
@@ -179,47 +182,78 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
     };
 
     const getUniqueContacts = (emails) => {
+        console.log("emails---->", emails);
+
         const contactsMap = new Map();
 
         emails.forEach((mail) => {
-            // from
+
+            const phone = mail.phone || null;
+
+            // FROM
             if (mail.from) {
                 const { name, email } = parseContact(mail.from);
-                if (!contactsMap.has(email)) contactsMap.set(email, name);
+                if (email) {
+                    if (!contactsMap.has(email)) {
+                        contactsMap.set(email, { name, email, phone });
+                    } else if (phone && !contactsMap.get(email).phone) {
+                        contactsMap.get(email).phone = phone;
+                    }
+                }
             }
 
-            // to (may have multiple)
+            // TO (multiple)
             if (mail.to) {
                 mail.to.split(",").forEach((raw) => {
                     const { name, email } = parseContact(raw);
-                    if (email && !contactsMap.has(email)) contactsMap.set(email, name);
+                    if (email) {
+                        if (!contactsMap.has(email)) {
+                            contactsMap.set(email, { name, email, phone });
+                        } else if (phone && !contactsMap.get(email).phone) {
+                            contactsMap.get(email).phone = phone;
+                        }
+                    }
                 });
             }
 
-            // Optional: handle cc
+            // CC
             if (mail.cc) {
                 mail.cc.split(",").forEach((raw) => {
                     const { name, email } = parseContact(raw);
-                    if (email && !contactsMap.has(email)) contactsMap.set(email, name);
+                    if (email) {
+                        if (!contactsMap.has(email)) {
+                            contactsMap.set(email, { name, email, phone });
+                        } else if (phone && !contactsMap.get(email).phone) {
+                            contactsMap.get(email).phone = phone;
+                        }
+                    }
                 });
             }
 
-            // Optional: handle bcc
+            // BCC
             if (mail.bcc) {
                 mail.bcc.split(",").forEach((raw) => {
                     const { name, email } = parseContact(raw);
-                    if (email && !contactsMap.has(email)) contactsMap.set(email, name);
+                    if (email) {
+                        if (!contactsMap.has(email)) {
+                            contactsMap.set(email, { name, email, phone });
+                        } else if (phone && !contactsMap.get(email).phone) {
+                            contactsMap.get(email).phone = phone;
+                        }
+                    }
                 });
             }
         });
 
-        // Convert Map to array for Ant Design Table
-        return Array.from(contactsMap, ([email, name], index) => ({
+        // Convert Map → array (Ant Design Table friendly)
+        return Array.from(contactsMap.values()).map((item, index) => ({
             key: index + 1,
-            name: name || "-",
-            email,
+            name: item.name || "-",
+            email: item.email,
+            phone: item.phone || "-",
         }));
     };
+
 
     // Unique state for this table
     const [uniqueCurrentPage, setUniqueCurrentPage] = useState(1);
@@ -269,7 +303,11 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
 
 
 
-
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60).toString().padStart(2, "0");
+        const secs = (seconds % 60).toString().padStart(2, "0");
+        return `${mins}:${secs}`;
+    }
     // console.log("emails--------->", emails)
 
 
@@ -288,7 +326,12 @@ export default function EmailExtractor({ emails, summary, setNextBtnHit, setPrev
             </div>} */}
 
             <div className="w-[90vw] mx-auto rounded-xl min-h-[86vh] mt-[10vh]">
-                <h2 className="text-xl font-semibold mb-4">Fetched Emails</h2>
+                <div className="flex justify-between w-1/2 items-center">
+
+                    <h2 className="text-xl font-semibold mb-4">Fetched Emails</h2>
+                    <h2>Time: {formatTime(timer)}</h2>
+
+                </div>
 
 
                 <div className="flex justify-between">

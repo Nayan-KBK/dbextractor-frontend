@@ -8,7 +8,7 @@ import { message } from "antd";
 
 const backendURL = import.meta.env.VITE_API_URL;
 
-export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, prevBtnHit, setCredentialPanel, scrollToExtractor }) {
+export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, prevBtnHit, setCredentialPanel, scrollToExtractor, startTimer, stopTimer }) {
 
     // console.log("backendURL---------->",backendURL)
 
@@ -17,6 +17,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
     const [currentFetchedPage, setCurrentFetchedPage] = useState(null)
 
 
+    const [withSignature, setWithSignature] = useState(false); // toggle
 
 
 
@@ -76,6 +77,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
     // console.log("currentFetchedPage by nayan",currentFetchedPage)
     const fetchHeaders = async () => {
         scrollToExtractor()
+        startTimer();
         setCredentialPanel(false)
         setEmails([]);
         setSummary({
@@ -120,6 +122,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
             page: formData.page,
             tls: formData.tls,
             pageSize: formData.pageSize,
+            withSignature
         };
 
         setCurrentFetchedPage(Number(formData.page));
@@ -206,6 +209,8 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
             messageApi.error("Failed to fetch emails !");
 
             console.error("Error fetching emails:", err);
+        } finally {
+            stopTimer(); // stop timer when fetch finishes
         }
 
 
@@ -215,6 +220,8 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
 
 
     const fetchNextPage = async () => {
+
+        startTimer()
 
         console.log("inside next page")
 
@@ -263,6 +270,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
             page: currentFetchedPage + 1,
             tls: formData.tls,
             pageSize: formData.pageSize,
+            withSignature
         };
         setCurrentFetchedPage(currentFetchedPage + 1)
 
@@ -349,6 +357,8 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
             messageApi.error("Failed to fetch emails !");
 
             console.error("Error fetching emails:", err);
+        }finally {
+            stopTimer(); // stop timer when fetch finishes
         }
 
 
@@ -377,6 +387,8 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
 
 
     const fetchPrevPage = async () => {
+
+        startTimer()
         if (currentFetchedPage <= 1) return; // prevent going below 1
 
         console.log("inside fetchPrevPage");
@@ -418,6 +430,7 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
             page: currentFetchedPage - 1,
             tls: formData.tls,
             pageSize: formData.pageSize,
+            withSignature
         };
 
         setCurrentFetchedPage(currentFetchedPage - 1);
@@ -485,6 +498,8 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
         } catch (err) {
             messageApi.error("Failed to fetch emails !");
             console.error("Error fetching emails:", err);
+        }finally {
+            stopTimer(); // stop timer when fetch finishes
         }
     };
 
@@ -555,6 +570,14 @@ export default function EmailCredentials({ setEmails, setSummary, nextBtnHit, pr
                     />
                     <p className="text-red-500">Note: Max email Fetch size is 20,000 </p>
 
+                    <label>
+                        Fetch Signature
+                        <input
+                            type="checkbox"
+                            checked={withSignature}
+                            onChange={() => setWithSignature(!withSignature)}
+                        />
+                    </label>
                     {/* Provider / Manual host toggle */}
                     <div className="flex flex-col relative">
                         <div className="flex items-center gap-3 mb-3">
